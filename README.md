@@ -21,6 +21,33 @@ vivado -mode batch -source scripts/create_project.tcl
 
 The generated project is written under `build/` and is intentionally excluded from Git. Open the generated `.xpr` in Vivado after the script completes.
 
+## Hardware regression suite
+
+The repository includes all 12 hardware-accelerated AES conditions:
+
+- Modes: ECB, CBC, CFB-128 and CTR.
+- Payloads: 16 B, 256 B and 4 KiB.
+- For every condition: assembly source, COE/MEM firmware images, expected
+  plaintext/state/ciphertext files and a self-checking testbench.
+- Each testbench executes three messages and checks raw counters, ciphertext,
+  key/IV loading, feedback or counter continuity and reset anomalies.
+- The exact testbench/firmware mapping is listed in [`TEST_MATRIX.md`](TEST_MATRIX.md).
+
+Run one condition from the repository root:
+
+```powershell
+vivado -mode batch -source scripts/run_test.tcl -tclargs CBC_256B
+```
+
+Run all 12 conditions:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/run_all_tests.ps1 -Vivado vivado
+```
+
+Test result CSV files are written to the XSim run directory. Generated Vivado
+projects and simulator products remain excluded from Git.
+
 ## Reproducibility scope
 
 Only source, packaged custom IP, block-design configuration, constraints and the required memory image are versioned. Generated runs, caches, reports, checkpoints and bitstreams are excluded.

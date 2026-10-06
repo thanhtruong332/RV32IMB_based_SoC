@@ -1,0 +1,13 @@
+case,mode,payload_bytes,blocks,testbench_top,testbench_file,firmware_coe,firmware_mem,firmware_source,expected_ciphertext
+ECB_16B,ECB,16,1,tb_hw_rv32imb_ECB_16B,sim/tb_hw_rv32imb_ECB_16B.v,firmware/images/ECB_16B.coe,firmware/images/ECB_16B.mem,firmware/source/ECB_16B.S,expected/ECB_16B_ciphertext_words.hex
+ECB_256B,ECB,256,16,tb_hw_rv32imb_ECB_256B,sim/tb_hw_rv32imb_ECB_256B.v,firmware/images/ECB_256B.coe,firmware/images/ECB_256B.mem,firmware/source/ECB_256B.S,expected/ECB_256B_ciphertext_words.hex
+ECB_4KiB,ECB,4096,256,tb_hw_rv32imb_ECB_4KiB,sim/tb_hw_rv32imb_ECB_4KiB.v,firmware/images/ECB_4KiB.coe,firmware/images/ECB_4KiB.mem,firmware/source/ECB_4KiB.S,expected/ECB_4KiB_ciphertext_words.hex
+CBC_16B,CBC,16,1,tb_hw_rv32imb_CBC_16B,sim/tb_hw_rv32imb_CBC_16B.v,firmware/images/CBC_16B.coe,firmware/images/CBC_16B.mem,firmware/source/CBC_16B.S,expected/CBC_16B_ciphertext_words.hex
+CBC_256B,CBC,256,16,tb_hw_rv32imb_CBC_256B,sim/tb_hw_rv32imb_CBC_256B.v,firmware/images/CBC_256B.coe,firmware/images/CBC_256B.mem,firmware/source/CBC_256B.S,expected/CBC_256B_ciphertext_words.hex
+CBC_4KiB,CBC,4096,256,tb_hw_rv32imb_CBC_4KiB,sim/tb_hw_rv32imb_CBC_4KiB.v,firmware/images/CBC_4KiB.coe,firmware/images/CBC_4KiB.mem,firmware/source/CBC_4KiB.S,expected/CBC_4KiB_ciphertext_words.hex
+CFB_16B,CFB,16,1,tb_hw_rv32imb_CFB_16B,sim/tb_hw_rv32imb_CFB_16B.v,firmware/images/CFB_16B.coe,firmware/images/CFB_16B.mem,firmware/source/CFB_16B.S,expected/CFB_16B_ciphertext_words.hex
+CFB_256B,CFB,256,16,tb_hw_rv32imb_CFB_256B,sim/tb_hw_rv32imb_CFB_256B.v,firmware/images/CFB_256B.coe,firmware/images/CFB_256B.mem,firmware/source/CFB_256B.S,expected/CFB_256B_ciphertext_words.hex
+CFB_4KiB,CFB,4096,256,tb_hw_rv32imb_CFB_4KiB,sim/tb_hw_rv32imb_CFB_4KiB.v,firmware/images/CFB_4KiB.coe,firmware/images/CFB_4KiB.mem,firmware/source/CFB_4KiB.S,expected/CFB_4KiB_ciphertext_words.hex
+CTR_16B,CTR,16,1,tb_hw_rv32imb_CTR_16B,sim/tb_hw_rv32imb_CTR_16B.v,firmware/images/CTR_16B.coe,firmware/images/CTR_16B.mem,firmware/source/CTR_16B.S,expected/CTR_16B_ciphertext_words.hex
+CTR_256B,CTR,256,16,tb_hw_rv32imb_CTR_256B,sim/tb_hw_rv32imb_CTR_256B.v,firmware/images/CTR_256B.coe,firmware/images/CTR_256B.mem,firmware/source/CTR_256B.S,expected/CTR_256B_ciphertext_words.hex
+CTR_4KiB,CTR,4096,256,tb_hw_rv32imb_CTR_4KiB,sim/tb_hw_rv32imb_CTR_4KiB.v,firmware/images/CTR_4KiB.coe,firmware/images/CTR_4KiB.mem,firmware/source/CTR_4KiB.S,expected/CTR_4KiB_ciphertext_words.hex
