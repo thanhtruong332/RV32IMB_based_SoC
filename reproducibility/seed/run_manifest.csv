@@ -1,0 +1,6 @@
+design,run,strategy,part,parent_synthesis,constraint_set,clock_mhz
+RV32IMB,expE_r1,Vivado Implementation Defaults,xc7z020clg484-2,synth_expD,constrs_1,40
+RV32IMB,expE_r2,Performance_Explore,xc7z020clg484-2,synth_expD,constrs_1,40
+RV32IMB,expE_r3,Performance_ExplorePostRoutePhysOpt,xc7z020clg484-2,synth_expD,constrs_1,40
+RV32IMB,expE_r4,Performance_NetDelay_high,xc7z020clg484-2,synth_expD,constrs_1,40
+RV32IMB,expE_r5,Performance_RefinePlacement,xc7z020clg484-2,synth_expD,constrs_1,40

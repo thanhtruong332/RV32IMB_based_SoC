@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/thanhtruong332/RV32IMB_based_SoC",
+  "release_tag": "v1.2.0",
+  "commit_resolution": "git rev-parse v1.2.0^{commit}",
+  "scope": "hardware-accelerated AES SoC",
+  "core": "RV32IMB",
+  "rtl_origin": "custom RTL",
+  "vivado": "2024.2 build 5239630",
+  "device": "xc7z020clg484-2",
+  "clock_hz": 40000000,
+  "power_workload": {
+    "mode": "CTR",
+    "payload_bytes": 4096,
+    "blocks": 256
+  },
+  "firmware_build_provenance": "handwritten RV32I assembly; assembler version was not recorded",
+  "elf_map": "not available for this handwritten hardware-offload firmware snapshot",
+  "activity_format": "post-route SAIF",
+  "license": "no open-source license declared; see LICENSE_STATUS.md"
+}

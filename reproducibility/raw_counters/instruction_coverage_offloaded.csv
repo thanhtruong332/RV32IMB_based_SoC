@@ -1,0 +1,2 @@
+core,window,retired,rv32i_alu,load,store,branch,jump,m_extension,b_extension,bram_writes
+RV32IMB,first plaintext store through final BRAM store,22011,18428,1024,2304,255,0,0,0,1024

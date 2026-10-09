@@ -1,0 +1,2 @@
+soc,mode,payload_bytes,blocks,clock_mhz,raw_cycles,duration_ms,throughput_mbit_s,static_w,dynamic_w,total_w,clock_dynamic_w,logic_dynamic_w,signal_dynamic_w,bram_dynamic_w,dsp_dynamic_w,mmcm_dynamic_w,saif_matched_nets,saif_total_nets,coverage_pct,confidence,energy_transaction_uJ,energy_bit_nJ,throughput_per_w_mbit_s_w,result
+RV32IMB,CTR,4096,256,40,43762,1.094050,29.951,0.108,0.130,0.238,0.013,0.003,0.003,0.005,<0.001,0.106,9437,25014,38,High,260.384,7.946,125.845,PASS

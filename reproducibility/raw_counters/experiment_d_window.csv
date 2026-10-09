@@ -1,0 +1,2 @@
+soc,mode,payload_bytes,blocks,counter_start,counter_stop,raw_cycles,start_time_ns,stop_time_ns,block_starts,key_word_writes,counter_word_writes,ctrl_zero_writes,ciphertext_errors,result
+RV32IMB,CTR,4096,256,149,43911,43762,4255,1098305,256,4,4,0,0,PASS

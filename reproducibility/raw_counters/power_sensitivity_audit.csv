@@ -1,0 +1,3 @@
+design,comparison,vectorless_w,saif_w,difference_pct,source
+RV32IMB,manuscript_vs_current_saif,0.328,0.238,-27.4,Table 4 of 71-1786090986.pdf vs RV32IMB_POSTROUTE_power_saif.rpt
+RV32IMB,same_current_checkpoint,0.256,0.238,-7.0,RV32IMB_POSTROUTE_power_vectorless.rpt vs RV32IMB_POSTROUTE_power_saif.rpt

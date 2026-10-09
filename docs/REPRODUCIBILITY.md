@@ -4,7 +4,7 @@
 | --- | --- |
 | RTL origin | Custom RTL snapshot supplied by the project owner |
 | Repository | https://github.com/thanhtruong332/RV32IMB_based_SoC |
-| Release | `v1.0.0` (use `git rev-parse v1.0.0` for the immutable commit) |
+| Release | `v1.2.0` (use `git rev-parse v1.2.0^{commit}` for the immutable commit) |
 | License | No open-source license is declared; see `LICENSE_STATUS.md` |
 | ISA | RV32I 2.1 with integrated M operations and a B subset |
 | Pipeline | Five stages: IF, ID, EX, MEM and WB |
@@ -22,3 +22,7 @@ The repository contains the packaged RV32IMB and AES IP sources, block-design
 configuration, constraints and the firmware image required to reconstruct the
 project. Generated runs, caches, checkpoints and bitstreams are deliberately
 excluded.
+
+## Curated evidence package
+
+The [`reproducibility/`](../reproducibility/) directory contains the measured artifacts, tool metadata and SHA-256 inventory associated with this release. Run `python reproducibility/verify_sha256.py` from any directory to verify it.

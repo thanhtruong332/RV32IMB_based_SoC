@@ -1,0 +1,6 @@
+design,run,strategy,progress,status
+RV32IMB,expE_r1,Vivado Implementation Defaults,100%,route_design Complete!
+RV32IMB,expE_r2,Performance_Explore,100%,route_design Complete!
+RV32IMB,expE_r3,Performance_ExplorePostRoutePhysOpt,100%,phys_opt_design (Post-Route) Complete!
+RV32IMB,expE_r4,Performance_NetDelay_high,100%,route_design Complete!
+RV32IMB,expE_r5,Performance_RefinePlacement,100%,route_design Complete!

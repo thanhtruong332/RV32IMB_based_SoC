@@ -50,9 +50,13 @@ projects and simulator products remain excluded from Git.
 
 ## Reproducibility scope
 
-Only source, packaged custom IP, block-design configuration, constraints and the required memory image are versioned. Generated runs, caches, reports, checkpoints and bitstreams are excluded.
+Source, packaged custom IP, block-design configuration, constraints and firmware are versioned. A compact set of measured SAIF, power, timing, utilization, seed and counter evidence is included under [`reproducibility/`](reproducibility/). Regenerable caches, checkpoints and bitstreams remain excluded.
 
 Architecture and tool metadata are listed in [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md).
+
+## Evidence package
+
+The reviewer-facing [`reproducibility/`](reproducibility/) directory records tool versions, raw evidence and SHA-256 hashes for release `v1.2.0`.
 
 ## License
 
