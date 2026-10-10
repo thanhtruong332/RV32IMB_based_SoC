@@ -4,7 +4,7 @@
 | --- | --- |
 | RTL origin | Custom RTL snapshot supplied by the project owner |
 | Repository | https://github.com/thanhtruong332/RV32IMB_based_SoC |
-| Release | `v1.2.1` (use `git rev-parse v1.2.1^{commit}` for the immutable commit) |
+| Release | `v1.2.2` (use `git rev-parse v1.2.2^{commit}` for the immutable commit) |
 | License | No open-source license is declared; see `LICENSE_STATUS.md` |
 | ISA | RV32I 2.1 with integrated M operations and a B subset |
 | Pipeline | Five stages: IF, ID, EX, MEM and WB |
@@ -15,7 +15,7 @@
 | Bit manipulation | CLZ, CTZ and CPOP subset |
 | Register file | 32 x 32-bit; synchronous write and asynchronous read, with same-cycle write bypass |
 | Hardware memory interface | AXI4-Lite master connected to instruction/data BRAM and the AES peripheral |
-| FPGA and clock | ZedBoard `xc7z020clg484-2`; 40 MHz experiment clock |
+| FPGA and clock | `xc7z020clg484-2` (Zynq-7020, same die and package as the ZedBoard part `xc7z020clg484-1`, faster speed grade); all three SoCs are implemented on this part for a like-for-like comparison; pin constraints from `constraints/zedboard.xdc`; 40 MHz experiment clock |
 | Vivado version | 2024.2 |
 
 The repository contains the packaged RV32IMB and AES IP sources, block-design

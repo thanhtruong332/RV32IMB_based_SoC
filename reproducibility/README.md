@@ -1,12 +1,12 @@
 # Reproducibility evidence — RV32IMB_based_SoC
 
-This directory is the compact reviewer-facing evidence package for release `v1.2.1`.
+This directory is the compact reviewer-facing evidence package for release `v1.2.2`.
 The Git commit is the commit referenced by the annotated release tag; resolve it with
-`git rev-parse v1.2.1^{commit}`.
+`git rev-parse v1.2.2^{commit}`.
 
 | Requested item | Location / status |
 | --- | --- |
-| RTL commit hash | Annotated tag `v1.2.1` |
+| RTL commit hash | Annotated tag `v1.2.2` |
 | Firmware hash | `SHA256SUMS.txt` covers `firmware/images/` and `firmware/source/` |
 | Vivado version | `metadata.json`; confirmed by the report headers |
 | Tcl scripts | `scripts/` plus the project scripts at `../scripts/` |

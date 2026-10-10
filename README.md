@@ -15,7 +15,7 @@ Portable Vivado source package for the RV32IMB_based_SoC design used in the SE-R
 
 On Windows, clone into a short path (for example `C:\work`) or run `git config --global core.longpaths true` first; some IP configuration paths exceed 260 characters.
 
-Requirements: Vivado 2024.2 and device support for `xc7z020clg484-2`.
+Requirements: Vivado 2024.2 and device support for `xc7z020clg484-2`. The reported results use this part; the ZedBoard itself carries the `-1` speed grade (`xc7z020clg484-1`), so re-implement for that part before programming a board.
 
 ```powershell
 vivado -mode batch -source scripts/create_project.tcl
@@ -58,7 +58,7 @@ Architecture and tool metadata are listed in [`docs/REPRODUCIBILITY.md`](docs/RE
 
 ## Evidence package
 
-The reviewer-facing [`reproducibility/`](reproducibility/) directory records tool versions, raw evidence and SHA-256 hashes for release `v1.2.1`.
+The reviewer-facing [`reproducibility/`](reproducibility/) directory records tool versions, raw evidence and SHA-256 hashes for release `v1.2.2`.
 
 ## License
 
