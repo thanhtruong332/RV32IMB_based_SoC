@@ -13,6 +13,8 @@ Portable Vivado source package for the RV32IMB_based_SoC design used in the SE-R
 
 ## Recreate the project
 
+On Windows, clone into a short path (for example `C:\work`) or run `git config --global core.longpaths true` first; some IP configuration paths exceed 260 characters.
+
 Requirements: Vivado 2024.2 and device support for `xc7z020clg484-2`.
 
 ```powershell
@@ -56,7 +58,7 @@ Architecture and tool metadata are listed in [`docs/REPRODUCIBILITY.md`](docs/RE
 
 ## Evidence package
 
-The reviewer-facing [`reproducibility/`](reproducibility/) directory records tool versions, raw evidence and SHA-256 hashes for release `v1.2.0`.
+The reviewer-facing [`reproducibility/`](reproducibility/) directory records tool versions, raw evidence and SHA-256 hashes for release `v1.2.1`.
 
 ## License
 
