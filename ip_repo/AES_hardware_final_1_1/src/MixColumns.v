@@ -10,7 +10,7 @@ module MixColumns (
     genvar i;
     generate
         for (i = 0; i < 4; i = i + 1) begin: col_loop
-            // Lấy 4 byte của 1 cột (Mỗi cột cách nhau 32 bit)
+
             wire [7:0] s0 = data_in[127 - 32*i -: 8];
             wire [7:0] s1 = data_in[119 - 32*i -: 8];
             wire [7:0] s2 = data_in[111 - 32*i -: 8];

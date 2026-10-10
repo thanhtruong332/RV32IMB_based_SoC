@@ -5,23 +5,22 @@ module KeyExpansionRound (
 );
     genvar i;
     wire [31:0] words [3:0];
-    
-    // ORIGINAL CODE - Đúng cho Big-Endian
+
     generate
         for (i = 0; i < 4; i = i + 1) begin: KeySplitLoop
             assign words[i] = key_in[127 - i * 32 -: 32];
         end
     endgenerate
-    
+
     // words[0] = key_in[127:96] = W0 (MSB)
     // words[1] = key_in[95:64]  = W1
     // words[2] = key_in[63:32]  = W2
     // words[3] = key_in[31:0]   = W3 (LSB)
-    
+
     wire [31:0] w3_rot = {words[3][23:0], words[3][31:24]};
-    
+
     wire [31:0] w3_sub;
-    generate 
+    generate
         for (i = 0; i < 4; i = i + 1) begin: SubWordLoop
             SubTable subtable_inst (
                 .data_in(w3_rot[8 * i +: 8]),
@@ -29,7 +28,7 @@ module KeyExpansionRound (
             );
         end
     endgenerate
-    
+
     wire [7:0] rcon_byte = round_count == 1  ? 8'h01 :
                            round_count == 2  ? 8'h02 :
                            round_count == 3  ? 8'h04 :
@@ -40,15 +39,14 @@ module KeyExpansionRound (
                            round_count == 8  ? 8'h80 :
                            round_count == 9  ? 8'h1b :
                            round_count == 10 ? 8'h36 : 8'h00;
-    
+
     wire [31:0] rcon = {rcon_byte, 24'h000000};
-    
-    // ORIGINAL OUTPUT - Đúng cho Big-Endian
+
     assign key_out[127:96] = words[0] ^ w3_sub ^ rcon;
     assign key_out[95:64]  = words[1] ^ key_out[127:96];
     assign key_out[63:32]  = words[2] ^ key_out[95:64];
     assign key_out[31:0]   = words[3] ^ key_out[63:32];
-    
+
 endmodule
 
 module KeyExpansion (

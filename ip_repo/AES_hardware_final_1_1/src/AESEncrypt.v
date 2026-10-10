@@ -1,25 +1,24 @@
 module AESEncrypt (
     input [127:0]   data_in,
-    input [1407:0]  all_keys,  
-    input [127:0]   iv_in,     
+    input [1407:0]  all_keys,
+    input [127:0]   iv_in,
     input [1:0]     mode_sel,  // 00:ECB, 01:CBC, 10:CTR, 11:CFB
     output reg [127:0] data_out,
-    output reg      done_tick, 
+    output reg      done_tick,
     input           clk,
-    input           enable,    
+    input           enable,
     input           reset
 );
 
     localparam Nr = 10;
-    
-    // Các trạng thái FSM
+
     localparam IDLE = 2'b00;
     localparam WORK = 2'b01;
     localparam DONE = 2'b10;
 
     reg [1:0] state, next_state;
-    reg [3:0] round, next_round; 
-    reg [127:0] state_reg, next_state_reg; 
+    reg [3:0] round, next_round;
+    reg [127:0] state_reg, next_state_reg;
 
     wire [127:0] subbyte_out;
     wire [127:0] shiftrow_out;
@@ -68,14 +67,13 @@ module AESEncrypt (
             state     <= next_state;
             round     <= next_round;
             state_reg <= next_state_reg;
-            
-            // Xử lý Output tùy Mode khi hoàn thành mã hóa
+
             if (state == DONE) begin
                 if (mode_sel == 2'b10 || mode_sel == 2'b11) begin
-                    // ⏱️ CTR & CFB: Output = Keystream ^ Plaintext
-                    data_out <= state_reg ^ data_in; 
+
+                    data_out <= state_reg ^ data_in;
                 end else begin
-                    // 🔓 ECB & CBC: Output = Kết quả AES thuần
+
                     data_out <= state_reg;
                 end
                 done_tick <= 1;
@@ -94,21 +92,21 @@ module AESEncrypt (
         case (state)
             IDLE: begin
                 if (enable) begin
-                    // Xử lý Input tùy Mode trước khi đưa vào AES
+
                     if (mode_sel == 2'b01) begin
-                        // 🔐 CBC: (Plaintext ^ IV) ^ Key0
+
                         next_state_reg = (data_in ^ iv_in) ^ all_keys[0 +: 128];
-                    end 
+                    end
                     else if (mode_sel == 2'b10 || mode_sel == 2'b11) begin
-                        // ⏱️ CTR & CFB: IV_Counter ^ Key0 (Không nạp data_in)
-                        next_state_reg = iv_in ^ all_keys[0 +: 128]; 
-                    end 
+
+                        next_state_reg = iv_in ^ all_keys[0 +: 128];
+                    end
                     else begin
-                        // 🔓 ECB: Plaintext ^ Key0
+
                         next_state_reg = data_in ^ all_keys[0 +: 128];
                     end
-                    
-                    next_round = 1; 
+
+                    next_round = 1;
                     next_state = WORK;
                 end
             end

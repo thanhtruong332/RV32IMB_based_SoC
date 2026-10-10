@@ -1,4 +1,4 @@
-module rv32i_top(
+module rv32i_top (
     input   wire            clk,
     input   wire            rst_n,
     input   wire    [31:0]  MEM_RDATA,
@@ -51,7 +51,7 @@ module rv32i_top(
     reg     [31:0]  ID_EX_rv2;
     reg     [31:0]  ID_EX_imm;
     reg     [6:0]   ID_EX_funct7;
-    reg     [6:0]   ID_EX_opcode;   // THEM: luu opcode de chong aliasing M/B
+    reg     [6:0]   ID_EX_opcode;
     reg     [2:0]   ID_EX_funct3, ID_EX_ALUOp;
     reg             ID_EX_Mem_Read, ID_EX_Mem_Write, ID_EX_Mem_To_Reg, ID_EX_Branch, ID_EX_Jump, ID_EX_ALUSrc1, ID_EX_ALUSrc2, ID_EX_LUI, ID_EX_Pcsrc;
 
@@ -114,9 +114,6 @@ module rv32i_top(
     assign  bus_stall       =   (MEM_READ || MEM_WRITE) && !MEM_READY;
     assign  Stall           =   hazard_stall | bus_stall;
 
-    // SUA BUG ALIASING: M/B-ext la R-type (opcode 0110011).
-    // Cu chi check ALUOp+funct7 → addi (I-type) co imm[11:5]=funct7 bi nham.
-    // Them check opcode == R-type.
     wire is_R_type = (ID_EX_opcode == 7'b0110011);
     wire is_M_ext = is_R_type && (ID_EX_funct7 == 7'b0000001);
     wire is_B_ext = is_R_type && (ID_EX_funct7 == 7'b0110000);
@@ -133,28 +130,23 @@ module rv32i_top(
                              is_B_ext ? b_out :
                                         ALU_result;
 
-    //IF_ID register (giu nguyen - !Stall de giu khi stall, dung)
     always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
+        if (!rst_n) begin
             IF_ID_pc            <= 32'h0;
             IF_ID_Instruction   <= 32'h0;
         end
-        else if(Flush) begin
+        else if (Flush) begin
             IF_ID_pc            <= 32'h0;
             IF_ID_Instruction   <= 32'h0000_0013; // NOP
         end
-        else if(!Stall) begin
+        else if (!Stall) begin
             IF_ID_pc            <= pc;
             IF_ID_Instruction   <= Instruction;
         end
-        // else (Stall): giu nguyen - dung
     end
 
-    //ID_EX register - DA SUA
-    //  Cu: else if(Stall || ID_Flush || Flush) → flush (Stall gom bus_stall → SAI)
-    //  Moi: bus_stall → GIU NGUYEN; flush chi cho hazard/branch/jump
     always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
+        if (!rst_n) begin
             ID_EX_rs1           <= 32'h0;
             ID_EX_rs2           <= 32'h0;
             ID_EX_pc            <= 32'h0;
@@ -177,13 +169,10 @@ module rv32i_top(
             ID_EX_rd            <= 5'b0;
             ID_EX_RegWrite      <= 1'b0;
         end
-        // === SUA: bus_stall → GIU NGUYEN (pipeline dung yen cho AXI) ===
-        else if(bus_stall) begin
-            // Khong lam gi: tat ca ID_EX_* giu gia tri cu
-            // → lenh sw dang cho AXI KHONG bi mat rv2
+        else if (bus_stall) begin
+            // Hold ID/EX state until the memory transaction completes.
         end
-        // === Flush (bong bong) CHI cho hazard / branch / jump ===
-        else if(hazard_stall || ID_Flush || Flush) begin
+        else if (hazard_stall || ID_Flush || Flush) begin
             ID_EX_RegWrite      <= 1'b0;
             ID_EX_Mem_Read      <= 1'b0;
             ID_EX_Mem_Write     <= 1'b0;
@@ -227,9 +216,8 @@ module rv32i_top(
         end
     end
 
-    //EX_MEM registers (giu nguyen - !bus_stall de giu, dung)
     always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
+        if (!rst_n) begin
             EX_MEM_Mem_Read     <= 1'b0;
             EX_MEM_Mem_Write    <= 1'b0;
             EX_MEM_Mem_To_Reg   <= 1'b0;
@@ -243,7 +231,7 @@ module rv32i_top(
             EX_MEM_imm          <= 32'b0;
             EX_MEM_LUI          <= 1'b0;
         end
-        else if(!bus_stall) begin
+        else if (!bus_stall) begin
             EX_MEM_Mem_Read     <= ID_EX_Mem_Read;
             EX_MEM_Mem_Write    <= ID_EX_Mem_Write;
             EX_MEM_Mem_To_Reg   <= ID_EX_Mem_To_Reg;
@@ -259,9 +247,8 @@ module rv32i_top(
         end
     end
 
-    //MEM_WB registers (giu nguyen)
     always @(posedge clk or negedge rst_n) begin
-        if(!rst_n) begin
+        if (!rst_n) begin
             MEM_WB_Mem_To_Reg   <= 1'b0;
             MEM_WB_ALU_result   <= 32'b0;
             MEM_WB_mem_data     <= 32'b0;
@@ -272,7 +259,7 @@ module rv32i_top(
             MEM_WB_imm          <= 32'b0;
             MEM_WB_LUI          <= 1'b0;
         end
-        else if(!bus_stall) begin
+        else if (!bus_stall) begin
             MEM_WB_rd           <= EX_MEM_rd;
             MEM_WB_Mem_To_Reg   <= EX_MEM_Mem_To_Reg;
             MEM_WB_ALU_result   <= EX_MEM_ALU_result;
@@ -285,17 +272,103 @@ module rv32i_top(
         end
     end
 
-    (* DONT_TOUCH = "yes" *) Register_file RF0 (.clk(clk), .rst_n(rst_n), .en(MEM_WB_RegWrite), .rs1(IF_ID_Instruction[19:15]), .rs2(IF_ID_Instruction[24:20]), .rd(MEM_WB_rd), .wd(write_data), .rv1(operand_1), .rv2(operand_2));
-    (* DONT_TOUCH = "yes" *) ALU A0 (.A(ALU_A), .B(ALU_B), .ALUControl(ALUControl), .ALU_result(ALU_result), .ZERO(ZERO));
-    (* DONT_TOUCH = "yes" *) M_Unit M0 (.clk(clk), .rs1(ALU_A), .rs2(ALU_B), .funct3(ID_EX_funct3), .m_result(m_out));
-    (* DONT_TOUCH = "yes" *) B_Unit B0 (.rs1(ALU_A), .b_op(b_op_sel), .b_result(b_out));
-    Immediate_generator IG0 (.Instruction(IF_ID_Instruction), .imm_type(imm_type), .immediate(immediate_raw));
-    Sign_extend SE0 (.immediate(immediate_raw), .imm_type(imm_type), .extended_imm(immediate));
-    (* DONT_TOUCH = "yes" *) Control_unit CU0 (.opcode(opcode), .ALUOp(ALUOp), .RegWrite(RegWrite), .MemRead(MemRead), .MemWrite(MemWrite), .Branch(Branch), .Jump(Jump), .MemToReg(MemToReg), .ALUSrc1(ALUSrc1), .ALUSrc2(ALUSrc2), .LUI(LUI), .Pcsrc(Pcsrc), .imm_type(imm_type));
-    ALU_control AC0 (.ALUOp(ID_EX_ALUOp), .funct3(ID_EX_funct3), .funct7(ID_EX_funct7), .ALU_control(ALUControl));
-    (* DONT_TOUCH = "yes" *) PC PC0 (.clk(clk), .rst_n(rst_n), .Stall(Stall), .Branch(ID_EX_Branch), .Pcsrc(ID_EX_Pcsrc), .Jump(ID_EX_Jump), .Branch_taken(Branch_taken), .offset(ID_EX_imm), .rs1_data(forwardA_data), .pc_of_instruction(ID_EX_pc), .pc(pc));
-    Branch_prediction BE0 (.funct3(ID_EX_funct3), .ALU_result(ALU_result), .ZERO(ZERO), .Branch_taken(Branch_taken));
-    Forwarding_unit FU0 (.ID_EX_rs1(ID_EX_rs1), .ID_EX_rs2(ID_EX_rs2), .EX_MEM_rd(EX_MEM_rd), .EX_MEM_RegWrite(EX_MEM_RegWrite), .MEM_WB_rd(MEM_WB_rd), .MEM_WB_RegWrite(MEM_WB_RegWrite), .ForwardA(ForwardA), .ForwardB(ForwardB));
-    Hazard_detection HD0 (.ID_EX_MemRead(ID_EX_Mem_Read), .ID_EX_rd(ID_EX_rd), .IF_ID_rs1(IF_ID_Instruction[19:15]), .IF_ID_rs2(IF_ID_Instruction[24:20]), .Stall(hazard_stall), .Flush(ID_Flush));
+    (* DONT_TOUCH = "yes" *) Register_file RF0 (
+        .clk(clk),
+        .rst_n(rst_n),
+        .en(MEM_WB_RegWrite),
+        .rs1(IF_ID_Instruction[19:15]),
+        .rs2(IF_ID_Instruction[24:20]),
+        .rd(MEM_WB_rd),
+        .wd(write_data),
+        .rv1(operand_1),
+        .rv2(operand_2)
+    );
+    (* DONT_TOUCH = "yes" *) ALU A0 (
+        .A(ALU_A),
+        .B(ALU_B),
+        .ALUControl(ALUControl),
+        .ALU_result(ALU_result),
+        .ZERO(ZERO)
+    );
+    (* DONT_TOUCH = "yes" *) M_Unit M0 (
+        .clk(clk),
+        .rs1(ALU_A),
+        .rs2(ALU_B),
+        .funct3(ID_EX_funct3),
+        .m_result(m_out)
+    );
+    (* DONT_TOUCH = "yes" *) B_Unit B0 (
+        .rs1(ALU_A),
+        .b_op(b_op_sel),
+        .b_result(b_out)
+    );
+    Immediate_generator IG0 (
+        .Instruction(IF_ID_Instruction),
+        .imm_type(imm_type),
+        .immediate(immediate_raw)
+    );
+    Sign_extend SE0 (
+        .immediate(immediate_raw),
+        .imm_type(imm_type),
+        .extended_imm(immediate)
+    );
+    (* DONT_TOUCH = "yes" *) Control_unit CU0 (
+        .opcode(opcode),
+        .ALUOp(ALUOp),
+        .RegWrite(RegWrite),
+        .MemRead(MemRead),
+        .MemWrite(MemWrite),
+        .Branch(Branch),
+        .Jump(Jump),
+        .MemToReg(MemToReg),
+        .ALUSrc1(ALUSrc1),
+        .ALUSrc2(ALUSrc2),
+        .LUI(LUI),
+        .Pcsrc(Pcsrc),
+        .imm_type(imm_type)
+    );
+    ALU_control AC0 (
+        .ALUOp(ID_EX_ALUOp),
+        .funct3(ID_EX_funct3),
+        .funct7(ID_EX_funct7),
+        .ALU_control(ALUControl)
+    );
+    (* DONT_TOUCH = "yes" *) PC PC0 (
+        .clk(clk),
+        .rst_n(rst_n),
+        .Stall(Stall),
+        .Branch(ID_EX_Branch),
+        .Pcsrc(ID_EX_Pcsrc),
+        .Jump(ID_EX_Jump),
+        .Branch_taken(Branch_taken),
+        .offset(ID_EX_imm),
+        .rs1_data(forwardA_data),
+        .pc_of_instruction(ID_EX_pc),
+        .pc(pc)
+    );
+    Branch_prediction BE0 (
+        .funct3(ID_EX_funct3),
+        .ALU_result(ALU_result),
+        .ZERO(ZERO),
+        .Branch_taken(Branch_taken)
+    );
+    Forwarding_unit FU0 (
+        .ID_EX_rs1(ID_EX_rs1),
+        .ID_EX_rs2(ID_EX_rs2),
+        .EX_MEM_rd(EX_MEM_rd),
+        .EX_MEM_RegWrite(EX_MEM_RegWrite),
+        .MEM_WB_rd(MEM_WB_rd),
+        .MEM_WB_RegWrite(MEM_WB_RegWrite),
+        .ForwardA(ForwardA),
+        .ForwardB(ForwardB)
+    );
+    Hazard_detection HD0 (
+        .ID_EX_MemRead(ID_EX_Mem_Read),
+        .ID_EX_rd(ID_EX_rd),
+        .IF_ID_rs1(IF_ID_Instruction[19:15]),
+        .IF_ID_rs2(IF_ID_Instruction[24:20]),
+        .Stall(hazard_stall),
+        .Flush(ID_Flush)
+    );
 
 endmodule
